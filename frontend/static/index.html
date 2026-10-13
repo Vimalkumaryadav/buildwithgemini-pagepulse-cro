@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PagePulse — Landing Pages that Pay for Themselves</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --accent: #10b981;
+      --accent-glow: rgba(16, 185, 129, 0.2);
+      --bg-dark: #090d16;
+      --card-bg: rgba(17, 24, 39, 0.85);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: radial-gradient(circle at 50% 0%, #1e293b 0%, var(--bg-dark) 75%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--card-border);
+      background: rgba(9, 13, 22, 0.7);
+      backdrop-filter: blur(12px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+
+    .logo-badge {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, #3b82f6, #10b981);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.25rem;
+      box-shadow: 0 4px 15px rgba(37, 99, 235, 0.35);
+    }
+
+    .brand-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .badge-pill {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 0.3rem 0.8rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    main {
+      flex: 1;
+      max-width: 1100px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 3rem 1.5rem;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .moto-tag {
+      display: inline-block;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: #60a5fa;
+      margin-bottom: 1rem;
+      padding: 0.3rem 0.9rem;
+      background: rgba(59, 130, 246, 0.12);
+      border-radius: 20px;
+      border: 1px solid rgba(59, 130, 246, 0.25);
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 1.2rem;
+      background: linear-gradient(to right, #ffffff, #93c5fd, #6ee7b7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 650px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* URL Form Card */
+    .form-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 2rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(16px);
+      margin-bottom: 3rem;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .url-input-wrap {
+      flex: 1;
+      position: relative;
+    }
+
+    .url-input-wrap input {
+      width: 100%;
+      padding: 1rem 1.25rem 1rem 3rem;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #fff;
+      font-size: 1.05rem;
+      transition: all 0.2s ease;
+    }
+
+    .url-input-wrap input:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+    }
+
+    .url-icon {
+      position: absolute;
+      left: 1.1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 1.1rem;
+    }
+
+    .btn-audit {
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+    }
+
+    .btn-audit:hover {
+      background: linear-gradient(135deg, #1d4ed8, #1e40af);
+      transform: translateY(-1px);
+    }
+
+    /* Optional Param Grid */
+    .params-toggle {
+      font-size: 0.85rem;
+      color: #60a5fa;
+      cursor: pointer;
+      margin-bottom: 1rem;
+      display: inline-block;
+    }
+
+    .param-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .param-group label {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .param-group input {
+      width: 100%;
+      padding: 0.6rem 0.8rem;
+      border-radius: 8px;
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-size: 0.95rem;
+    }
+
+    /* Results Dashboard */
+    #results-area {
+      display: none;
+      animation: fadeIn 0.4s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .audit-grid {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 860px) {
+      .audit-grid { grid-template-columns: 1fr; }
+      .input-row { flex-direction: column; }
+    }
+
+    /* Score Card */
+    .score-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 2rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .gauge-circle {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      border: 8px solid #3b82f6;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+      box-shadow: 0 0 25px rgba(59, 130, 246, 0.3);
+    }
+
+    .gauge-num {
+      font-size: 3.2rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .gauge-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .rating-badge {
+      font-size: 1.1rem;
+      font-weight: 700;
+      padding: 0.4rem 1.2rem;
+      border-radius: 9999px;
+      margin-bottom: 0.75rem;
+    }
+
+    .rating-badge.elite { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+    .rating-badge.solid { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+    .rating-badge.leaky { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+    .rating-badge.drain { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+
+    /* Pillars Breakdown */
+    .pillars-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 2rem;
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .pillar-row {
+      margin-bottom: 1.2rem;
+    }
+
+    .pillar-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+
+    .bar-bg {
+      height: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 1s ease;
+    }
+
+    /* Financial ROI Lift Banner */
+    .roi-banner {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(59, 130, 246, 0.15));
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 18px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .roi-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .stat-box {
+      background: rgba(9, 13, 22, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 1.2rem;
+    }
+
+    .stat-val {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #34d399;
+      margin-bottom: 0.2rem;
+    }
+
+    .stat-lbl {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Leaks & Recommendations */
+    .recommendations-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .fix-item {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem;
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 10px;
+      margin-bottom: 0.8rem;
+      border-left: 4px solid #3b82f6;
+    }
+
+    .fix-rank {
+      font-weight: 800;
+      color: #60a5fa;
+      font-size: 1.1rem;
+    }
+
+    .fix-content h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .fix-content p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    /* Extracted raw facts */
+    .raw-card {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      white-space: pre-wrap;
+      color: #cbd5e1;
+      max-height: 250px;
+      overflow-y: auto;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--card-border);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="#" class="brand">
+    <div class="logo-badge">⚡</div>
+    <div>
+      <div class="brand-title">PagePulse</div>
+    </div>
+  </a>
+  <div class="badge-pill">Powered by Gemini & CRO Intelligence</div>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="moto-tag">Moto: Landing Pages that Pay for Themselves</div>
+    <h1>Turn Leaky Traffic Into Cold Hard Conversions</h1>
+    <p>Audit any landing page URL against 5 battle-tested conversion pillars. Uncover your leaks, see projected revenue lift, and turn bounce rates into sales.</p>
+  </div>
+
+  <div class="form-card">
+    <form id="auditForm">
+      <div class="input-row">
+        <div class="url-input-wrap">
+          <span class="url-icon">🌐</span>
+          <input type="text" id="urlInput" placeholder="Enter landing page URL (e.g. stripe.com or yourlandingpage.com)" required>
+        </div>
+        <button type="submit" class="btn-audit" id="auditBtn">
+          <span>Audit URL</span>
+          <span>→</span>
+        </button>
+      </div>
+
+      <div class="params-toggle" id="toggleParams">⚙ Customize Traffic & Deal Size (Optional)</div>
+      
+      <div class="param-grid" id="paramGrid" style="display: none;">
+        <div class="param-group">
+          <label>Monthly Visitors</label>
+          <input type="number" id="monthlyVisitors" value="15000">
+        </div>
+        <div class="param-group">
+          <label>Current Conversion Rate (%)</label>
+          <input type="number" step="0.1" id="currentCr" value="1.5">
+        </div>
+        <div class="param-group">
+          <label>Target Conversion Rate (%)</label>
+          <input type="number" step="0.1" id="targetCr" value="3.2">
+        </div>
+        <div class="param-group">
+          <label>Average Order / Deal Value ($)</label>
+          <input type="number" step="1" id="aov" value="85">
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div id="results-area">
+    <!-- Financial Lift Banner -->
+    <div class="roi-banner">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <h2 style="font-size: 1.5rem; font-weight: 800; color: #fff;">💰 The "Pays for Itself" Financial Lift</h2>
+          <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.2rem;">Projected revenue upside by fixing conversion friction points</p>
+        </div>
+        <div class="badge-pill" style="background: rgba(59, 130, 246, 0.2); color: #93c5fd; border-color: rgba(59, 130, 246, 0.4);">
+          ROI Multiplier: High
+        </div>
+      </div>
+
+      <div class="roi-stats">
+        <div class="stat-box">
+          <div class="stat-val" id="statMonthlyRev">+$21,675</div>
+          <div class="stat-lbl">Net Additional Monthly Rev</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="statAnnualRev">+$260,100</div>
+          <div class="stat-lbl">Projected Annual Lift</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="statLiftConversions">+255 /mo</div>
+          <div class="stat-lbl">Extra Paying Customers</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Audit Breakdown Grid -->
+    <div class="audit-grid">
+      <!-- Overall Score Card -->
+      <div class="score-card">
+        <div class="gauge-circle" id="gaugeCircle">
+          <div class="gauge-num" id="gaugeNum">68</div>
+          <div class="gauge-label">CRO Score</div>
+        </div>
+        <div class="rating-badge leaky" id="ratingBadge">Leaky Funnel</div>
+        <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.4;" id="scoreSummary">
+          Your page has noticeable friction leaks preventing visitors from converting.
+        </p>
+      </div>
+
+      <!-- 5 CRO Pillars Breakdown -->
+      <div class="pillars-card">
+        <div class="card-title">
+          <span>📊 5 Core Conversion Pillars</span>
+        </div>
+
+        <div class="pillar-row">
+          <div class="pillar-header">
+            <span>1. Value Proposition & Headline Clarity</span>
+            <span id="scoreP1">70/100</span>
+          </div>
+          <div class="bar-bg"><div class="bar-fill" id="barP1" style="width: 70%; background: #3b82f6;"></div></div>
+        </div>
+
+        <div class="pillar-row">
+          <div class="pillar-header">
+            <span>2. CTA Prominence & Visual Hierarchy</span>
+            <span id="scoreP2">60/100</span>
+          </div>
+          <div class="bar-bg"><div class="bar-fill" id="barP2" style="width: 60%; background: #f59e0b;"></div></div>
+        </div>
+
+        <div class="pillar-row">
+          <div class="pillar-header">
+            <span>3. Friction & Cognitive Load</span>
+            <span id="scoreP3">75/100</span>
+          </div>
+          <div class="bar-bg"><div class="bar-fill" id="barP3" style="width: 75%; background: #10b981;"></div></div>
+        </div>
+
+        <div class="pillar-row">
+          <div class="pillar-header">
+            <span>4. Social Proof & Trust Signals</span>
+            <span id="scoreP4">55/100</span>
+          </div>
+          <div class="bar-bg"><div class="bar-fill" id="barP4" style="width: 55%; background: #ef4444;"></div></div>
+        </div>
+
+        <div class="pillar-row">
+          <div class="pillar-header">
+            <span>5. Urgency & Risk Reversal</span>
+            <span id="scoreP5">65/100</span>
+          </div>
+          <div class="bar-bg"><div class="bar-fill" id="barP5" style="width: 65%; background: #8b5cf6;"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recommendations -->
+    <div class="recommendations-card">
+      <div class="card-title">
+        <span>🚀 Top 3 High-Impact Fixes ("Fix First to Pay for Itself")</span>
+      </div>
+
+      <div class="fix-item">
+        <div class="fix-rank">#1</div>
+        <div class="fix-content">
+          <h4 id="fix1Title">Clarify the Above-the-Fold Headline</h4>
+          <p id="fix1Desc">Replace generic features with a direct, quantitative benefit. State who it's for, what pain it kills, and the outcome achieved in 5 seconds.</p>
+        </div>
+      </div>
+
+      <div class="fix-item">
+        <div class="fix-rank">#2</div>
+        <div class="fix-content">
+          <h4 id="fix2Title">Strengthen Visual CTA Contrast & Reduce Competing Links</h4>
+          <p id="fix2Desc">Ensure your primary CTA stands out with high contrasting color and benefit-driven copy ('Claim My Free Trial') instead of passive verbs ('Submit').</p>
+        </div>
+      </div>
+
+      <div class="fix-item">
+        <div class="fix-rank">#3</div>
+        <div class="fix-content">
+          <h4 id="fix3Title">Add Verified Social Proof Directly Near the Action Zone</h4>
+          <p id="fix3Desc">Place recognizable client logos, trust badges, or customer testimonial quotes within 100px of your primary button to neutralize checkout hesitation.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Extracted Page Elements Log -->
+    <div class="recommendations-card">
+      <div class="card-title">
+        <span>🔍 Live Extracted Page Insights</span>
+      </div>
+      <div class="raw-card" id="extractedBox">Analyzing page...</div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  PagePulse CRO Auditor · Track 3: Build With Gemini · Moto: Landing pages that pay for themselves
+</footer>
+
+<script>
+  const form = document.getElementById('auditForm');
+  const btn = document.getElementById('auditBtn');
+  const resultsArea = document.getElementById('results-area');
+  const toggleParams = document.getElementById('toggleParams');
+  const paramGrid = document.getElementById('paramGrid');
+
+  toggleParams.addEventListener('click', () => {
+    if (paramGrid.style.display === 'none') {
+      paramGrid.style.display = 'grid';
+      toggleParams.textContent = '▲ Hide Customization Options';
+    } else {
+      paramGrid.style.display = 'none';
+      toggleParams.textContent = '⚙ Customize Traffic & Deal Size (Optional)';
+    }
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const url = document.getElementById('urlInput').value.trim();
+    if (!url) return;
+
+    btn.disabled = true;
+    btn.innerHTML = '<span>Auditing...</span>';
+
+    try {
+      const visitors = parseInt(document.getElementById('monthlyVisitors').value) || 15000;
+      const currentCr = parseFloat(document.getElementById('currentCr').value) || 1.5;
+      const targetCr = parseFloat(document.getElementById('targetCr').value) || 3.2;
+      const aov = parseFloat(document.getElementById('aov').value) || 85.0;
+
+      const resp = await fetch('/api/audit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          url: url,
+          monthly_visitors: visitors,
+          current_cr_pct: currentCr,
+          projected_cr_pct: targetCr,
+          aov_usd: aov
+        })
+      });
+
+      const data = await resp.json();
+      renderAudit(data, visitors, currentCr, targetCr, aov);
+    } catch (err) {
+      alert('Error auditing landing page: ' + err.message);
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<span>Audit URL</span><span>→</span>';
+    }
+  });
+
+  function renderAudit(data, visitors, currentCr, targetCr, aov) {
+    resultsArea.style.display = 'block';
+    resultsArea.scrollIntoView({ behavior: 'smooth' });
+
+    // Display extracted page data
+    document.getElementById('extractedBox').textContent = data.extracted_summary;
+
+    // Calculate revenue numbers
+    const currConv = Math.floor(visitors * (currentCr / 100));
+    const targetConv = Math.floor(visitors * (targetCr / 100));
+    const extraConv = targetConv - currConv;
+    const extraMonthly = extraConv * aov;
+    const extraAnnual = extraMonthly * 12;
+
+    document.getElementById('statMonthlyRev').textContent = '+$' + extraMonthly.toLocaleString();
+    document.getElementById('statAnnualRev').textContent = '+$' + extraAnnual.toLocaleString();
+    document.getElementById('statLiftConversions').textContent = '+' + extraConv.toLocaleString() + ' /mo';
+
+    // Compute dynamic pillar scores based on presence of key elements in extracted summary
+    const summary = data.extracted_summary.toLowerCase();
+    
+    // Pillar 1: Clarity & Headlines
+    let p1 = 60;
+    if (summary.includes('h1 headlines:') && !summary.includes('no h1 tags found')) p1 += 25;
+    if (summary.includes('meta description:') && !summary.includes('none found')) p1 += 10;
+    p1 = Math.min(p1, 95);
+
+    // Pillar 2: CTA Prominence
+    let p2 = 45;
+    if (summary.includes('primary ctas:') && !summary.includes('no clear ctas')) p2 += 35;
+    if (summary.includes('forms:') && !summary.includes('0 form(s)')) p2 += 15;
+    p2 = Math.min(p2, 92);
+
+    // Pillar 3: Friction
+    let p3 = 70;
+    if (summary.includes('visible input fields:') && (summary.includes('1') || summary.includes('2') || summary.includes('3'))) p3 += 20;
+    p3 = Math.min(p3, 90);
+
+    // Pillar 4: Social proof
+    let p4 = 40;
+    if (!summary.includes('minimal or none detected')) p4 += 45;
+    p4 = Math.min(p4, 95);
+
+    // Pillar 5: Urgency & Risk Reversal
+    let p5 = 62;
+    if (summary.includes('guarantee') || summary.includes('free') || summary.includes('trial')) p5 += 25;
+    p5 = Math.min(p5, 94);
+
+    const overall = Math.round((p1 * 0.25) + (p2 * 0.25) + (p3 * 0.15) + (p4 * 0.20) + (p5 * 0.15));
+
+    document.getElementById('gaugeNum').textContent = overall;
+    document.getElementById('scoreP1').textContent = p1 + '/100';
+    document.getElementById('scoreP2').textContent = p2 + '/100';
+    document.getElementById('scoreP3').textContent = p3 + '/100';
+    document.getElementById('scoreP4').textContent = p4 + '/100';
+    document.getElementById('scoreP5').textContent = p5 + '/100';
+
+    document.getElementById('barP1').style.width = p1 + '%';
+    document.getElementById('barP2').style.width = p2 + '%';
+    document.getElementById('barP3').style.width = p3 + '%';
+    document.getElementById('barP4').style.width = p4 + '%';
+    document.getElementById('barP5').style.width = p5 + '%';
+
+    const ratingBadge = document.getElementById('ratingBadge');
+    const scoreSummary = document.getElementById('scoreSummary');
+    const gaugeCircle = document.getElementById('gaugeCircle');
+
+    if (overall >= 85) {
+      ratingBadge.className = 'rating-badge elite';
+      ratingBadge.textContent = 'Elite Converter';
+      scoreSummary.textContent = 'High-converting structure with strong value clarity and friction reduction.';
+      gaugeCircle.style.borderColor = '#10b981';
+      gaugeCircle.style.boxShadow = '0 0 25px rgba(16, 185, 129, 0.4)';
+    } else if (overall >= 70) {
+      ratingBadge.className = 'rating-badge solid';
+      ratingBadge.textContent = 'Solid Foundation';
+      scoreSummary.textContent = 'Decent foundation, but several conversion leaks are costing you warm customer revenue.';
+      gaugeCircle.style.borderColor = '#3b82f6';
+      gaugeCircle.style.boxShadow = '0 0 25px rgba(59, 130, 246, 0.4)';
+    } else if (overall >= 50) {
+      ratingBadge.className = 'rating-badge leaky';
+      ratingBadge.textContent = 'Leaky Funnel';
+      scoreSummary.textContent = 'Noticeable friction and weak social proof. Significant visitors bounce before converting.';
+      gaugeCircle.style.borderColor = '#f59e0b';
+      gaugeCircle.style.boxShadow = '0 0 25px rgba(245, 158, 11, 0.4)';
+    } else {
+      ratingBadge.className = 'rating-badge drain';
+      ratingBadge.textContent = 'Critical Revenue Drain';
+      scoreSummary.textContent = 'Major conversion bottlenecks. Fix your headline, CTAs, and trust signals immediately.';
+      gaugeCircle.style.borderColor = '#ef4444';
+      gaugeCircle.style.boxShadow = '0 0 25px rgba(239, 68, 68, 0.4)';
+    }
+  }
+</script>
+
+</body>
+</html>
