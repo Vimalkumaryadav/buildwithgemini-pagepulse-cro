@@ -1,20 +1,27 @@
-"""Standalone Web Server & CRO Auditor for PagePulse: 'Landing pages that pay for themselves'.
-Provides both direct REST audit endpoints with live URL extraction & heuristic scoring,
-and integrates with the ADK agent.
+"""Unified Production Web Server & CRO Auditor for PagePulse:
+'Landing pages that pay for themselves'.
+
+Features:
+1. Direct REST Audit Endpoint (/api/audit)
+2. Interactive A2UI Agent Chat Endpoint (/api/chat) that talks directly to our ADK Agent
+   and returns native A2UI cards + text responses.
+3. Clean Web UI rendering on port 8080.
 """
 
 import os
 import sys
-from fastapi import FastAPI, HTTPException
+import json
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel, HttpUrl
-from typing import Optional
+from pydantic import BaseModel
+from typing import Optional, List, Dict, Any
 
-# Add cro-agent app to sys.path so we can reuse CRO tools directly
+# Add cro-agent app to sys.path
 sys.path.insert(0, "/config/Desktop/BuildWithGemini/cro-agent")
 from app.cro_tools import deep_crawl_and_extract_landing_page, calculate_cro_revenue_lift
+from app.agent import root_agent
 
-app = FastAPI(title="PagePulse - CRO Landing Page Auditor")
+app = FastAPI(title="PagePulse - CRO Landing Page Auditor & A2UI Agent")
 
 class AuditRequest(BaseModel):
     url: str
@@ -22,6 +29,9 @@ class AuditRequest(BaseModel):
     current_cr_pct: Optional[float] = 1.5
     projected_cr_pct: Optional[float] = 3.0
     aov_usd: Optional[float] = 100.0
+
+class ChatRequest(BaseModel):
+    message: str
 
 @app.post("/api/audit")
 async def audit_endpoint(req: AuditRequest):
@@ -46,6 +56,65 @@ async def audit_endpoint(req: AuditRequest):
         "revenue_lift": lift_summary,
         "moto": "Landing pages that pay for themselves"
     }
+
+@app.post("/api/chat")
+async def chat_endpoint(req: ChatRequest):
+    msg = req.message.strip()
+    if not msg:
+        raise HTTPException(status_code=400, detail="Message cannot be empty.")
+    
+    try:
+        from google.adk.runners import Runner
+        from google.adk.sessions import InMemorySessionService
+        from google.genai import types
+
+        # Run query directly through ADK Runner with in-memory session
+        runner = Runner(
+            agent=root_agent,
+            session_service=InMemorySessionService(),
+            app_name="pagepulse"
+        )
+        session = await runner.session_service.create_session(app_name="pagepulse", user_id="web-user")
+        
+        reply_texts = []
+        a2ui_messages = []
+
+        async for event in runner.run_async(
+            session_id=session.id,
+            user_id="web-user",
+            new_message=types.Content(role="user", parts=[types.Part(text=msg)])
+        ):
+            if event.content and event.content.parts:
+                for part in event.content.parts:
+                    if getattr(part, "text", None):
+                        reply_texts.append(part.text)
+                    elif getattr(part, "inline_data", None):
+                        # A2UI rewrapped blob from a2ui_callback
+                        import base64
+                        raw = base64.b64decode(part.inline_data.data).decode("utf-8")
+                        # Extract inner json
+                        import re
+                        m = re.search(r"<a2a_datapart_json>(.*?)</a2a_datapart_json>", raw)
+                        if m:
+                            try:
+                                pkg = json.loads(m.group(1))
+                                if "data" in pkg:
+                                    a2ui_messages.append(pkg["data"])
+                            except Exception:
+                                pass
+
+        parts = []
+        for t in reply_texts:
+            parts.append({"kind": "text", "text": t})
+        for a in a2ui_messages:
+            parts.append({"kind": "a2ui", "data": a})
+
+        if not parts:
+            parts.append({"kind": "text", "text": "Audit complete."})
+
+        return {"parts": parts}
+    except Exception as e:
+        return {"parts": [{"kind": "text", "text": f"Agent query error: {str(e)}"}]}
 
 # Mount static files for web UI
 app.mount("/", StaticFiles(directory="/config/Desktop/BuildWithGemini/frontend/static", html=True), name="static")
