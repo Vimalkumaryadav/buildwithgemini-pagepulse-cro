@@ -12,7 +12,7 @@ from typing import Optional
 
 # Add cro-agent app to sys.path so we can reuse CRO tools directly
 sys.path.insert(0, "/config/Desktop/BuildWithGemini/cro-agent")
-from app.cro_tools import fetch_and_extract_landing_page, calculate_cro_revenue_lift
+from app.cro_tools import deep_crawl_and_extract_landing_page, calculate_cro_revenue_lift
 
 app = FastAPI(title="PagePulse - CRO Landing Page Auditor")
 
@@ -29,8 +29,8 @@ async def audit_endpoint(req: AuditRequest):
     if not url:
         raise HTTPException(status_code=400, detail="URL cannot be empty.")
     
-    # 1. Fetch & extract page data
-    extracted_summary = fetch_and_extract_landing_page(url)
+    # 1. Fetch & extract page data using the deep crawler
+    extracted_summary = deep_crawl_and_extract_landing_page(url)
     
     # 2. Calculate projected financial lift
     lift_summary = calculate_cro_revenue_lift(
