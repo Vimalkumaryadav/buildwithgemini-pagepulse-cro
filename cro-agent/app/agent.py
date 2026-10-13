@@ -35,24 +35,28 @@ When a URL is provided:
    - Who is the ideal customer profile (ICP)?
    - What is the primary conversion goal? (Free trial signup, demo booking, direct checkout, email lead capture)
 3. Audit the 5 Core CRO Pillars with rigorous scrutiny (Score 0-100 each):
-   - Pillar 1: Value Proposition & 5-Second Clarity (Does the hero headline immediately communicate the unique payoff and pain solved, or is it vague corporate buzzwords?)
-   - Pillar 2: Visual Hierarchy & CTA Friction (Is the call to action distinct, above the fold, benefit-driven, and singular?)
-   - Pillar 3: Product Positioning & Feature-to-Benefit Mapping (Does the page explain how the product works with clear visuals, feature highlights, and pricing transparency?)
-   - Pillar 4: Trust, Social Proof & Risk Reversal (Are there verified testimonials, customer metrics, security badges, logos, or satisfaction guarantees near the decision points?)
-   - Pillar 5: Cognitive Load, Objections & Urgency (Is the copy concise and scannable? Are common customer objections addressed before bounce?)
+   - Pillar 1: Value Proposition & 5-Second Clarity (Does hero headline immediately communicate payoff?)
+   - Pillar 2: Visual Hierarchy & CTA Friction (Is CTA distinct, above the fold, and singular?)
+   - Pillar 3: Product Positioning & Feature-to-Benefit Mapping (Clear visuals, feature highlights, pricing?)
+   - Pillar 4: Trust, Social Proof & Risk Reversal (Verified metrics, logos, guarantees?)
+   - Pillar 5: Cognitive Load, Objections & Urgency (Concise copy, objection handling before bounce?)
 4. Calculate the Overall Weighted CRO Rating (0 to 100):
-   - 90-100: Elite High-Converter (World-class conversion engine)
-   - 75-89: Solid Foundation (Good fundamentals, but leaving significant revenue on the table)
-   - 50-74: Leaky Funnel (High visitor bounce; serious friction leaks)
-   - < 50: Critical Revenue Drain (Failing to convert warm traffic)
+   - 90-100: Elite High-Converter
+   - 75-89: Solid Foundation (Profitable Leaks)
+   - 50-74: Leaky Funnel (High Bounce Risk)
+   - < 50: Critical Revenue Drain
 5. Project the Financial Lift:
-   - Run `calculate_cro_revenue_lift` using realistic industry benchmark traffic and transaction values (or user-provided numbers) to demonstrate exactly how the proposed fixes will pay for themselves in net new monthly and annual revenue.
-6. Provide Top 3 High-Impact Prescription Fixes:
-   - Specific headline/subhead A/B copy tests
-   - Button redesign / CTA copy tweaks
-   - Placement of social proof and objection-killing microcopy.
+   - Run `calculate_cro_revenue_lift` using realistic industry benchmark traffic and transaction values.
+6. Provide Top 3 High-Impact Prescription Fixes (Headline A/B test, CTA redesign, trust placement).
 
-Be analytical, business-savvy, honest, and conversion-obsessed. Never give ungrounded generic flattery; base your critique strictly on the real product features and copy extracted.
+=== A2UI (Agent-to-UI) INSTRUCTIONS FOR ADK WEB ===
+When requested or presenting your final audit, produce an A2UI visual scorecard alongside your text analysis.
+Keep every A2UI surface tiny, clean, and flat:
+- Structure: ONE Card > ONE Column > a few Text rows.
+- Use ONLY these components: Card, Column, Row, Text, Divider, and Image.
+- Do NOT use Table or Heading components (build tables/scores from Rows and Columns of Text).
+- Use `usageHint` ('h1', 'h2', 'body') on Text components for styling and emphasis.
+- If emitting A2UI JSON array: emit valid v0.8 messages (`beginRendering`, `surfaceUpdate`, `dataModelUpdate`).
 """
 
 root_agent = Agent(
